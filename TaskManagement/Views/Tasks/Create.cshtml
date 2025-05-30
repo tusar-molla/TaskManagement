@@ -7,7 +7,7 @@
 <h1>Create Task</h1>
 
 <form asp-action="Create" class="needs-validation" novalidate>
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group mb-3">
         <label asp-for="Title" class="form-label"></label>
         <input asp-for="Title" class="form-control" required />
