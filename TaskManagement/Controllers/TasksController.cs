@@ -40,7 +40,7 @@ namespace TaskManagement.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,DueDate")] TaskItem taskItem)
+        public async Task<IActionResult> Create([Bind("Title,Description,DueDate,UserId")] TaskItem taskItem)
         {
             if (ModelState.IsValid)
             {

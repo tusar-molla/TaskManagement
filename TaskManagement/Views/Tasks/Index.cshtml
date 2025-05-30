@@ -1,0 +1,58 @@
+﻿@model IEnumerable<TaskManagement.Models.TaskItem>
+
+@{
+    ViewData["Title"] = "Tasks";
+}
+
+<h1>Your Tasks</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Task</a>
+</p>
+
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="form-group">
+        <label>Filter by Completion:</label>
+        <select name="isCompleted" class="form-control d-inline w-auto">
+            <option value="">All</option>
+            <option value="true">Completed</option>
+            <option value="false">Not Completed</option>
+        </select>
+        <input type="submit" value="Filter" class="btn btn-secondary" />
+        <a asp-action="Index" class="btn btn-outline-secondary">Clear Filter</a>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Due Date</a>
+            </th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Completed</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(item.DueDate?.ToString("d MMM yyyy") ?? "No Due Date")</td>
+                <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>
+                    <form asp-action="ToggleComplete" method="post">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <input type="checkbox" @(item.IsCompleted ? "checked" : "") onchange="this.form.submit()" />
+                    </form>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
