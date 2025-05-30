@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TaskManagement.Models;
 
 namespace TaskManagement.Data
 {
@@ -9,5 +10,6 @@ namespace TaskManagement.Data
             : base(options)
         {
         }
+        public DbSet<TaskItem> TaskItems { get; set; }
     }
 }
