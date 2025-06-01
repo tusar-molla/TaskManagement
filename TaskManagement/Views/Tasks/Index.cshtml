@@ -4,55 +4,233 @@
     ViewData["Title"] = "Tasks";
 }
 
-<h1>Your Tasks</h1>
+<style>
+    body {
+        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+        font-family: 'Segoe UI', Roboto, sans-serif;
+    }
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Task</a>
-</p>
+    .table-container {
+        max-width: 1200px;
+        margin: 2.5rem auto;
+        padding: 0 1.5rem;
+    }
 
-<form asp-action="Index" method="get" class="mb-3">
-    <div class="form-group">
-        <label>Filter by Completion:</label>
-        <select name="isCompleted" class="form-control d-inline w-auto">
-            <option value="">All</option>
-            <option value="true">Completed</option>
-            <option value="false">Not Completed</option>
-        </select>
-        <input type="submit" value="Filter" class="btn btn-secondary" />
-        <a asp-action="Index" class="btn btn-outline-secondary">Clear Filter</a>
-    </div>
+    .table {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        background: #fff;
+        border: 1px solid #e9ecef;
+    }
+
+        .table thead {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+        }
+
+        .table th {
+            padding: 1.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-size: 0.9rem;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+            .table tbody tr:hover {
+                background-color: #f8f9fa;
+                transform: translateY(-1px);
+            }
+
+        .table td {
+            padding: 1.25rem;
+            vertical-align: middle;
+            font-size: 0.95rem;
+        }
+
+    .due-date {
+        color: #dc3545;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .completed-checkbox {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+        accent-color: #6e8efb;
+        transition: transform 0.2s ease;
+    }
+
+        .completed-checkbox:hover {
+            transform: scale(1.1);
+        }
+
+    .btn-primary {
+        background-color: #6e8efb;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #5a75d6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .btn-danger:hover {
+            background-color: #b02a37;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .btn-secondary, .btn-outline-secondary {
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .btn-secondary:hover, .btn-outline-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+    .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .form-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        transition: border-color 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 0 8px rgba(110, 142, 251, 0.3);
+        }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #343a40;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+    .table th, .table td {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-sm {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    .table th, .table td {
+        padding: 0.5rem;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .form-group {
+        gap: 0.5rem;
+    }    
+</style>
+
+<h1 class="text-center page-title">Task List</h1>
+
+<div class="d-flex justify-content-center mb-3">
+    <a asp-action="Create" class="btn btn-primary">Add New Task</a>
+</div>
+
+<form asp-action="Index" method="get" class="d-flex align-items-center flex-wrap">
+    <label class="me-2 mb-0" for="isCompleted">Filter by Completion:</label>
+
+    <select id="isCompleted" name="isCompleted" class="form-select me-2" style="width: 180px;">
+        <option value="">All</option>
+        <option value="true">Completed</option>
+        <option value="false">Not Completed</option>
+    </select>
+    <input type="submit" value="Search" class="btn btn-secondary me-2" />
+    <a asp-action="Index" class="btn btn-outline-secondary">Clear Filter</a>
 </form>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Due Date</a>
-            </th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Completed</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="table-container">
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>@(item.DueDate?.ToString("d MMM yyyy") ?? "No Due Date")</td>
-                <td>@Html.DisplayFor(modelItem => item.Title)</td>
-                <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                <td>
-                    <form asp-action="ToggleComplete" method="post">
-                        <input type="hidden" name="id" value="@item.Id" />
-                        <input type="checkbox" @(item.IsCompleted ? "checked" : "") onchange="this.form.submit()" />
-                    </form>
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
-                </td>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" class="text-white text-decoration-none">Due Date</a>
+                </th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Completed</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="due-date">@(item.DueDate?.ToString("d MMM yyyy") ?? "No Due Date")</td>
+                    <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                    <td>
+                        <form asp-action="ToggleComplete" method="post">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="checkbox" class="completed-checkbox" @(item.IsCompleted ? "checked" : "") onchange="this.form.submit()" />
+                        </form>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary me-2">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

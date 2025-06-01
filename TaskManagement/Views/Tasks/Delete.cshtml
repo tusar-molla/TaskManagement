@@ -4,26 +4,180 @@
     ViewData["Title"] = "Delete Task";
 }
 
-<h1>Delete Task</h1>
+<style>
+    body {
+        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+        font-family: 'Segoe UI', Roboto, sans-serif;
+    }
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Task</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Title</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Title)</dd>
-        <dt class="col-sm-2">Description</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
-        <dt class="col-sm-2">Due Date</dt>
-        <dd class="col-sm-10">@(Model.DueDate?.ToString("d MMM yyyy") ?? "No Due Date")</dd>
-        <dt class="col-sm-2">Completed</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.IsCompleted)</dd>
-    </dl>
+    .container.mt-5 {
+        max-width: 900px;
+        padding: 0 1.5rem;
+    }
 
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" />
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </form>
+    .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        background: #fff;
+        transition: transform 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-8px);
+        }
+
+    .card-header {
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        color: white;
+        border-radius: 12px 12px 0 0;
+        padding: 1.5rem;
+    }
+
+        .card-header h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0;
+        }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffecb5;
+        color: #856404;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    .dl-horizontal dt {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .dl-horizontal dd {
+        font-size: 0.95rem;
+        color: #555;
+        margin-bottom: 1.5rem;
+    }
+
+    .due-date {
+        color: #dc3545;
+        font-weight: 500;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+        padding: 0.5rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+        .btn-danger:hover {
+            background-color: #b02a37;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+        border-width: 2px;
+        padding: 0.5rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .d-flex {
+        gap: 1.5rem;
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-header h4 {
+        font-size: 1.3rem;
+    }
+
+    .dl-horizontal dt, .dl-horizontal dd {
+        font-size: 0.9rem;
+    }
+
+    .btn-danger, .btn-outline-secondary {
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+    }
+    .card-header h4 {
+        font-size: 1.2rem;
+    }
+
+    .dl-horizontal dt, .dl-horizontal dd {
+        font-size: 0.85rem;
+    }
+
+    .btn-danger, .btn-outline-secondary {
+        padding: 0.35rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .d-flex {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow">
+                <div class="card-header text-center">
+                    <h4 class="mb-0">Delete Task</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert-warning text-center">
+                        Are you sure you want to delete this task?
+                    </div>
+                    <dl class="dl-horizontal">
+                        <dt>Title</dt>
+                        <dd>@Html.DisplayFor(model => model.Title)</dd>
+                        <dt>Description</dt>
+                        <dd>@Html.DisplayFor(model => model.Description)</dd>
+                        <dt>Due Date</dt>
+                        <dd class="due-date">@(Model.DueDate?.ToString("d MMM yyyy") ?? "No Due Date")</dd>
+                        <dt>Completed</dt>
+                        <dd>@Html.DisplayFor(model => model.IsCompleted)</dd>
+                    </dl>
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex justify-content-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">Back to Task List</a>
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

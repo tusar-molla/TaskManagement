@@ -4,36 +4,221 @@
     ViewData["Title"] = "Edit Task";
 }
 
-<h1>Edit Task</h1>
+<style>
+    body {
+        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+        font-family: 'Segoe UI', Roboto, sans-serif;
+    }
 
-<form asp-action="Edit" class="needs-validation" novalidate>
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group mb-3">
-        <label asp-for="Title" class="form-label"></label>
-        <input asp-for="Title" class="form-control" required />
-        <span asp-validation-for="Title" class="text-danger"></span>
+    .container.mt-5 {
+        max-width: 900px;
+        padding: 0 1.5rem;
+    }
+
+    .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        background: #fff;
+        transition: transform 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-8px);
+        }
+
+    .card-header {
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        color: white;
+        border-radius: 12px 12px 0 0;
+        padding: 1.5rem;
+    }
+
+        .card-header h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0;
+        }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.75rem;
+    }
+
+    .form-control, .form-control:focus {
+        border-radius: 8px;
+        border: 2px solid #ced4da;
+        box-shadow: none;
+        font-size: 1rem;
+        padding: 0.6rem 0.8rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .form-control:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 0 0 0.25rem rgba(110, 142, 251, 0.3);
+        }
+
+    .textarea {
+        resize: vertical;
+        min-height: 150px;
+        font-size: 1rem;
+    }
+
+    .form-check-input {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+        accent-color: #6e8efb;
+        margin-top: 0.3rem;
+        transition: transform 0.2s ease;
+    }
+
+        .form-check-input:hover {
+            transform: scale(1.1);
+        }
+
+    .text-danger {
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .btn-primary {
+        background-color: #6e8efb;
+        border: none;
+        padding: 0.5rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #5a75d6;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .btn-outline-danger {
+        border-color: #dc3545;
+        color: #dc3545;
+        border-width: 2px;
+        padding: 0.5rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .d-flex {
+        gap: 1.5rem;
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-header h4 {
+        font-size: 1.3rem;
+    }
+
+    .form-label {
+        font-size: 0.95rem;
+    }
+
+    .form-control, .textarea {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.7rem;
+    }
+
+    .btn-primary, .btn-outline-danger {
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+    }
+    .card-header h4 {
+        font-size: 1.2rem;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+    }
+
+    .form-control, .textarea {
+        font-size: 0.85rem;
+    }
+
+    .btn-primary, .btn-outline-danger {
+        padding: 0.35rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .d-flex {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow">
+                <div class="card-header text-center">
+                    <h4 class="mb-0">Edit Task</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" class="needs-validation" novalidate>
+                        <div asp-validation-summary="All" class="text-danger mb-4"></div>
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-4">
+                            <label asp-for="Title" class="form-label">Task Title</label>
+                            <input asp-for="Title" class="form-control" required placeholder="Enter task title" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control textarea" rows="5" placeholder="Enter task description"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="DueDate" class="form-label">Due Date</label>
+                            <input asp-for="DueDate" type="date" class="form-control" />
+                            <span asp-validation-for="DueDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="IsCompleted" class="form-label">Completed</label>
+                            <input asp-for="IsCompleted" type="checkbox" class="form-check-input" />
+                            <span asp-validation-for="IsCompleted" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <a asp-action="Index" class="btn btn-outline-danger">Back to Task List</a>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group mb-3">
-        <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="DueDate" class="form-label"></label>
-        <input asp-for="DueDate" type="date" class="form-control" />
-        <span asp-validation-for="DueDate" class="text-danger"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="IsCompleted" class="form-label"></label>
-        <input asp-for="IsCompleted" type="checkbox" class="form-check-input" />
-        <span asp-validation-for="IsCompleted" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

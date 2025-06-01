@@ -24,7 +24,7 @@ namespace TaskManagement.Controllers
             var userId = _userManager.GetUserId(User);
             var tasks = _context.TaskItems.Where(t => t.UserId == userId);
 
-            if (isCompleted.HasValue)
+            if (isCompleted.HasValue)   
             {
                 tasks = tasks.Where(t => t.IsCompleted == isCompleted.Value);
             }
