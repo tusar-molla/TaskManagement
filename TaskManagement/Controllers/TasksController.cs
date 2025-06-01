@@ -40,9 +40,8 @@ namespace TaskManagement.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,DueDate")] TaskItem taskItem)
+        [HttpPost]        
+        public async Task<IActionResult> Create(TaskItem taskItem)
         {
             var userId = _userManager.GetUserId(User);
             if (string.IsNullOrEmpty(userId))
@@ -50,7 +49,6 @@ namespace TaskManagement.Controllers
                 ModelState.AddModelError("", "User is not authenticated. Please log in.");
                 return View(taskItem);
             }
-
             ModelState.Remove("UserId");
 
             if (ModelState.IsValid)
@@ -58,9 +56,7 @@ namespace TaskManagement.Controllers
                 taskItem.UserId = userId;
                 taskItem.IsCompleted = false;
                 _context.Add(taskItem);
-                await _context.SaveChangesAsync();
-
-                System.Diagnostics.Debug.WriteLine($"Task created: Id={taskItem.Id}, UserId={taskItem.UserId}, Title={taskItem.Title}");
+                await _context.SaveChangesAsync();                
                 return RedirectToAction(nameof(Index));
             }
 
@@ -89,9 +85,8 @@ namespace TaskManagement.Controllers
             return View(taskItem);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,DueDate,IsCompleted")] TaskItem taskItem)
+        [HttpPost]        
+        public async Task<IActionResult> Edit(int id, TaskItem taskItem)
         {
             if (id != taskItem.Id) return NotFound();
             var userId = _userManager.GetUserId(User);
@@ -116,7 +111,6 @@ namespace TaskManagement.Controllers
                     {
                         return Unauthorized();
                     }
-
                     existingTask.Title = taskItem.Title;
                     existingTask.Description = taskItem.Description;
                     existingTask.DueDate = taskItem.DueDate;
@@ -137,7 +131,6 @@ namespace TaskManagement.Controllers
             foreach (var error in errors)
             {
                 ModelState.AddModelError("", error);
-                System.Diagnostics.Debug.WriteLine($"Validation error: {error}");
             }
             return View(taskItem);
         }
@@ -159,7 +152,6 @@ namespace TaskManagement.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var taskItem = await _context.TaskItems.FindAsync(id);
@@ -178,7 +170,6 @@ namespace TaskManagement.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleComplete(int id)
         {
             var taskItem = await _context.TaskItems.FindAsync(id);
